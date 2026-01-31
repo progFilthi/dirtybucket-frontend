@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Beat Marketplace Frontend
 
-## Getting Started
+Modern beat marketplace frontend built with Next.js App Router, TypeScript, and shadcn/ui. This application integrates with a Spring Boot backend and supports role-based authentication for producers and artists.
 
-First, run the development server:
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- Bun + bunx
+- Tailwind CSS
+- shadcn/ui
+- TanStack Query (server state)
+- Zod (schema validation)
+
+---
+
+## Authentication & Authorization
+
+The application implements a complete authentication flow integrated with a Spring Boot + Spring Security backend.
+
+### Features
+
+- JWT-based authentication
+- Role-based access control (PRODUCER, ARTIST)
+- Secure token storage and refresh handling
+- Protected routes and layouts
+- Role-aware dashboards
+
+### Auth Flow
+
+1. User signs up or logs in
+2. Backend issues JWT access token
+3. Frontend stores token securely
+4. Auth context provides user + role state
+5. Route guards enforce role-based access
+6. Automatic redirect on auth/role mismatch
+
+---
+
+## Role-Based Dashboards
+
+The UI supports multiple roles per user with separate experiences:
+
+### Producer
+
+- Beat creation and management
+- Direct-to-S3 asset uploads (presigned URLs)
+- Pricing and publishing
+- Sales and performance metrics
+
+Routes:
+- `/producer/dashboard`
+- `/producer/beats`
+- `/producer/beats/new`
+
+### Artist
+
+- Marketplace browsing
+- Beat preview and purchase
+- Purchased beat library
+
+Routes:
+- `/marketplace`
+- `/beats/[beatId]`
+- `/library`
+
+---
+
+## File Upload Architecture
+
+All media uploads use direct-to-S3 presigned URLs for scalability.
+
+### Upload Flow
+
+1. Frontend requests presigned URL from backend
+2. Backend creates asset record and returns presigned URL
+3. Frontend uploads file directly to S3
+4. Frontend notifies backend on completion
+5. Backend triggers async processing
+
+This design avoids routing large files through the API and supports background media processing.
+
+---
+
+## Development
+
+Run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
 bun dev
-```
+app/
+  producer/
+  marketplace/
+  artist/
+lib/
+  api/
+  auth/
+  hooks/
+components/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
