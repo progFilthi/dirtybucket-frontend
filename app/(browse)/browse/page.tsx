@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useBeats } from '@/lib/hooks/use-beat-queries';
-import { BeatCard } from '@/components/marketplace/beat-card';
+import { BeatCard } from '@/components/beats/beat-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -77,7 +77,7 @@ export default function MarketplacePage() {
 
             {/* Genre */}
             <div>
-              <Select value={selectedGenre} onValueChange={setSelectedGenre}>
+              <Select value={selectedGenre} onValueChange={(val) => setSelectedGenre(val || 'All')}>
                 <SelectTrigger>
                   <SelectValue placeholder="Genre" />
                 </SelectTrigger>

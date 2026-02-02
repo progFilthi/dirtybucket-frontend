@@ -7,6 +7,7 @@ import { useBeat } from '@/lib/hooks/use-beat-queries';
 import { AudioPlayer } from '@/components/audio/audio-player';
 import { Nav } from '@/components/layout/nav';
 import { Button } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button-link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -39,9 +40,9 @@ export default function BeatDetailPage() {
         <div className="container max-w-6xl mx-auto px-4 py-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold">Beat not found</h2>
-            <Button asChild className="mt-4">
-              <Link href="/marketplace">Back to Marketplace</Link>
-            </Button>
+            <ButtonLink href="/browse" className="mt-4">
+              Back to Browse
+            </ButtonLink>
           </div>
         </div>
       </div>
@@ -70,6 +71,8 @@ export default function BeatDetailPage() {
         return 'WAV download, trackout stems, non-exclusive';
       case LicenseType.EXCLUSIVE:
         return 'Full exclusive rights, all files';
+      default:
+        return 'Standard license';
     }
   };
 
@@ -161,7 +164,7 @@ export default function BeatDetailPage() {
                     <CardHeader>
                       <CardTitle className="text-lg">{pricing.licenseType}</CardTitle>
                       <CardDescription>
-                        {getLicenseDescription(pricing.licenseType)}
+                        {getLicenseDescription(pricing.licenseType as LicenseType)}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">

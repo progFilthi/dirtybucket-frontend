@@ -39,13 +39,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const response = await apiClient.get<UserResponse>('/api/v1/users/me');
             const validated = userResponseSchema.parse(response);
 
-            // Map to User type (assuming role comes from JWT, we'll need to add this endpoint)
+            // Set user from backend response (role now comes from response)
             setUser({
                 ...validated,
-                role: UserRole.PRODUCER, // TODO: Get from backend response
+                role: validated.role || UserRole.PRODUCER,
             });
         } catch (error) {
-            // Not authenticated or error
+            // Not authenticated or error - silently fail
+            console.debug('Auth check failed:', error instanceof Error ? error.message : 'Unknown error');
             setUser(null);
         } finally {
             setIsLoading(false);
@@ -62,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const user = userResponseSchema.parse(response);
         setUser({
             ...user,
-            role: UserRole.PRODUCER, // TODO: Extract from JWT or response
+            role: user.role || UserRole.PRODUCER,
         });
     };
 
@@ -76,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const user = userResponseSchema.parse(response);
         setUser({
             ...user,
-            role: UserRole.PRODUCER, // Backend sets PRODUCER by default
+            role: user.role || UserRole.PRODUCER,
         });
     };
 

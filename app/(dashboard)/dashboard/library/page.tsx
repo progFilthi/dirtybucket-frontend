@@ -9,7 +9,17 @@ import { Download, Music } from 'lucide-react';
 import Link from 'next/link';
 
 // Mock data - would come from API in production
-const mockPurchases = [
+const mockPurchases: Array<{
+  id: string;
+  beat: {
+    title: string;
+    producer: string;
+  };
+  licenseType: string;
+  price: number;
+  purchasedAt: string;
+  downloadUrl: string;
+}> = [
   // {
   //   id: '1',
   //   beat: {
@@ -60,12 +70,14 @@ export default function LibraryPage() {
                       {' • '}
                       ${purchase.price.toFixed(2)}
                     </div>
-                    <Button asChild>
-                      <a href={purchase.downloadUrl} download>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
-                      </a>
-                    </Button>
+                    <a
+                      href={purchase.downloadUrl}
+                      download
+                      className="h-7 gap-1 px-2 text-xs/relaxed inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 transition-all"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Download
+                    </a>
                   </div>
                 </CardContent>
               </Card>
@@ -79,11 +91,9 @@ export default function LibraryPage() {
               <p className="text-muted-foreground mb-6 text-center max-w-md">
                 Browse the marketplace to find beats and start building your library
               </p>
-              <Button asChild size="lg">
-                <Link href="/marketplace">
-                  Browse Marketplace
-                </Link>
-              </Button>
+              <Link href="/marketplace" className="h-8 gap-1 px-2.5 text-xs/relaxed inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 transition-all">
+                Browse Marketplace
+              </Link>
             </CardContent>
           </Card>
         )}

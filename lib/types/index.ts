@@ -32,13 +32,35 @@ export enum UserRole {
     ADMIN = 'ADMIN',
 }
 
+
+export enum SubscriptionTier {
+    FREE = 'FREE',
+    CREATOR = 'CREATOR',
+    PRO = 'PRO',
+}
+
+export enum SubscriptionStatus {
+    ACTIVE = 'ACTIVE',
+    PAST_DUE = 'PAST_DUE',
+    CANCELED = 'CANCELED',
+    NONE = 'NONE',
+}
+
 // User Types
+export interface UserSubscription {
+    tier: SubscriptionTier;
+    status: SubscriptionStatus;
+    currentPeriodEnd: string;
+    cancelAtPeriodEnd: boolean;
+}
+
 export interface User {
     id: string;
     username: string;
     email: string;
     role: UserRole;
     profileImageUrl?: string;
+    subscription?: UserSubscription;
     createdAt: string;
     updatedAt: string;
 }
@@ -56,7 +78,8 @@ export interface Beat {
     producerId: string;
     producer?: User;
     assets?: Asset[];
-    pricing?: BeatPricing[];
+    // Pricing is optional/deprecated for Subscription MVP, but kept for legacy or future one-offs
+    pricing?: BeatPricing[]; 
     createdAt: string;
     updatedAt: string;
 }
@@ -75,7 +98,7 @@ export interface Asset {
     updatedAt: string;
 }
 
-// Pricing Types
+// Pricing Types (Kept for reference or future hybrid model)
 export interface BeatPricing {
     id: string;
     beatId: string;
@@ -90,17 +113,17 @@ export interface PresignedUploadResponse {
     assetId: string;
     presignedUrl: string;
     s3Key: string;
+    uploadUrl?: string; // Standardize this if needed
 }
 
-// Purchase Types
-export interface Purchase {
+// Download/Access Types
+export interface DownloadLog {
     id: string;
     beatId: string;
     beat?: Beat;
     userId: string;
     user?: User;
-    licenseType: LicenseType;
-    price: number;
-    downloadUrl?: string;
-    createdAt: string;
+    licenseType: LicenseType; // The license granted by the subscription download
+    downloadedAt: string;
 }
+

@@ -142,7 +142,7 @@ export default function NewBeatPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="musicalKey">Musical Key</Label>
-                <Select value={musicalKey} onValueChange={(value) => setValue('musicalKey', value)}>
+                <Select value={musicalKey || undefined} onValueChange={(value) => setValue('musicalKey', value ?? '')}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select key" />
                   </SelectTrigger>
@@ -160,7 +160,7 @@ export default function NewBeatPage() {
             {/* Genre */}
             <div className="space-y-2">
               <Label htmlFor="genre">Genre</Label>
-              <Select value={genre} onValueChange={(value) => setValue('genre', value)}>
+              <Select value={genre || undefined} onValueChange={(value) => setValue('genre', value ?? '')}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select genre" />
                 </SelectTrigger>

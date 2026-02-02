@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import { AssetType, ProcessingStatus, LicenseType, BeatStatus, UserRole } from '@/lib/types';
+
+// ... (Rest of file)
+
 
 // ============================================
 // Date Transformer
@@ -35,6 +39,55 @@ export const userResponseSchema = z.object({
     id: z.string().uuid(),
     username: z.string(),
     email: z.string().email(),
+    role: z.nativeEnum(UserRole).optional().default(UserRole.PRODUCER),
+    createdAt: dateTransformer,
+    updatedAt: dateTransformer,
+});
+
+
+// ============================================
+// Asset Schemas
+// ============================================
+
+export const presignAssetRequestSchema = z.object({
+    type: z.nativeEnum(AssetType),
+    fileName: z.string(),
+    mimeType: z.string(),
+});
+
+export const presignedUploadResponseSchema = z.object({
+    assetId: z.string().uuid(),
+    presignedUrl: z.string().url(),
+    s3Key: z.string(),
+});
+
+export const assetResponseSchema = z.object({
+    id: z.string().uuid(),
+    beatId: z.string().uuid(),
+    type: z.nativeEnum(AssetType),
+    fileName: z.string(),
+    mimeType: z.string(),
+    s3Key: z.string(),
+    url: z.string().url().optional(),
+    processingStatus: z.nativeEnum(ProcessingStatus),
+    createdAt: dateTransformer,
+    updatedAt: dateTransformer,
+});
+
+// ============================================
+// Pricing Schemas
+// ============================================
+
+export const pricingSchema = z.object({
+    licenseType: z.nativeEnum(LicenseType),
+    price: z.number().min(0),
+});
+
+export const beatPricingResponseSchema = z.object({
+    id: z.string().uuid(),
+    beatId: z.string().uuid(),
+    licenseType: z.nativeEnum(LicenseType),
+    price: z.number(),
     createdAt: dateTransformer,
     updatedAt: dateTransformer,
 });
@@ -60,55 +113,11 @@ export const beatResponseSchema = z.object({
     musicalKey: z.string().optional(),
     genre: z.string().optional(),
     tags: z.array(z.string()).optional(),
-    status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
+    status: z.nativeEnum(BeatStatus),
     producerId: z.string().uuid(),
-    createdAt: dateTransformer,
-    updatedAt: dateTransformer,
-});
-
-// ============================================
-// Asset Schemas
-// ============================================
-
-export const presignAssetRequestSchema = z.object({
-    type: z.enum(['ORIGINAL_AUDIO', 'PREVIEW_AUDIO', 'THUMBNAIL_IMAGE', 'COVER_IMAGE']),
-    fileName: z.string(),
-    mimeType: z.string(),
-});
-
-export const presignedUploadResponseSchema = z.object({
-    assetId: z.string().uuid(),
-    presignedUrl: z.string().url(),
-    s3Key: z.string(),
-});
-
-export const assetResponseSchema = z.object({
-    id: z.string().uuid(),
-    beatId: z.string().uuid(),
-    type: z.enum(['ORIGINAL_AUDIO', 'PREVIEW_AUDIO', 'THUMBNAIL_IMAGE', 'COVER_IMAGE']),
-    fileName: z.string(),
-    mimeType: z.string(),
-    s3Key: z.string(),
-    url: z.string().url().optional(),
-    processingStatus: z.enum(['UPLOADING', 'UPLOADED', 'PROCESSING', 'READY', 'FAILED']),
-    createdAt: dateTransformer,
-    updatedAt: dateTransformer,
-});
-
-// ============================================
-// Pricing Schemas
-// ============================================
-
-export const pricingSchema = z.object({
-    licenseType: z.enum(['BASIC', 'PREMIUM', 'EXCLUSIVE']),
-    price: z.number().min(0),
-});
-
-export const beatPricingResponseSchema = z.object({
-    id: z.string().uuid(),
-    beatId: z.string().uuid(),
-    licenseType: z.enum(['BASIC', 'PREMIUM', 'EXCLUSIVE']),
-    price: z.number(),
+    producer: userResponseSchema.optional(), // Added
+    assets: z.array(assetResponseSchema).optional(), // Added
+    pricing: z.array(beatPricingResponseSchema).optional(), // Added
     createdAt: dateTransformer,
     updatedAt: dateTransformer,
 });
@@ -130,3 +139,4 @@ export type AssetResponse = z.infer<typeof assetResponseSchema>;
 
 export type PricingInput = z.infer<typeof pricingSchema>;
 export type BeatPricingResponse = z.infer<typeof beatPricingResponseSchema>;
+
