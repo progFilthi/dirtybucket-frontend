@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useBeats } from '@/lib/hooks/use-beat-queries';
 import { BeatCard } from '@/components/beats/beat-card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';

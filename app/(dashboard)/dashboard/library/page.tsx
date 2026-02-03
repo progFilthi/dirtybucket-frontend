@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuth } from '@/lib/providers/auth-provider';
 import { useDownloadHistory } from '@/lib/hooks/use-downloads';
 import { Nav } from '@/components/layout/nav';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +10,6 @@ import { SubscriptionCard } from '@/components/subscription/subscription-card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function LibraryPage() {
-  const { user } = useAuth();
   const { data: downloads, isLoading } = useDownloadHistory();
 
   return (

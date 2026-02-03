@@ -25,10 +25,6 @@ export function BeatCard({ beat }: BeatCardProps) {
     (asset) => asset.type === AssetType.PREVIEW_AUDIO && asset.processingStatus === ProcessingStatus.READY
   );
 
-  const lowestPrice = beat.pricing && beat.pricing.length > 0
-    ? Math.min(...beat.pricing.map((p) => p.price))
-    : null;
-
   const handlePlayPause = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();

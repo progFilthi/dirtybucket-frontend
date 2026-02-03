@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/providers/auth-provider';
-import { Button } from '@/components/ui/button';
 import { ButtonLink } from '@/components/ui/button-link';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

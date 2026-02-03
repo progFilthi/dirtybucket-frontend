@@ -8,6 +8,7 @@ import { SubscriptionStatus, SubscriptionTier } from '@/lib/types';
 import { Calendar, Crown, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 export function SubscriptionCard() {
     const { data: subscription, isLoading } = useSubscription();
@@ -55,9 +56,9 @@ export function SubscriptionCard() {
                     <CardDescription>Subscribe to unlock unlimited beat downloads</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Button asChild>
-                        <a href="/pricing">View Plans</a>
-                    </Button>
+                    <Link href="/pricing">
+                        <Button>View Plans</Button>
+                    </Link>
                 </CardContent>
             </Card>
         );

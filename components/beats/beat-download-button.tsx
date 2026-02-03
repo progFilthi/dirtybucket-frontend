@@ -42,8 +42,8 @@ export function BeatDownloadButton({
                 
                 toast.success(`Downloading "${beatTitle}"`);
             }
-        } catch (error: any) {
-            toast.error(error?.message || 'Failed to download beat');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to download beat');
         } finally {
             setIsDownloading(false);
         }
