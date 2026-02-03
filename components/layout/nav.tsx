@@ -51,14 +51,14 @@ export function Nav() {
           {/* Navigation Links */}
           <div className="flex items-center space-x-6">
             <Link
-              href="/marketplace"
+              href="/browse"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive('/marketplace')
+                isActive('/browse')
                   ? 'text-foreground'
                   : 'text-muted-foreground'
               }`}
             >
-              Marketplace
+              Browse
             </Link>
 
             {isAuthenticated && (
@@ -114,13 +114,13 @@ export function Nav() {
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/library')}>
+                  <DropdownMenuItem onClick={() => router.push('/dashboard/library')}>
                     <ShoppingBag className="mr-2 h-4 w-4" />
                     My Library
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/producer/profile')}>
+                  <DropdownMenuItem onClick={() => router.push('/dashboard/billing')}>
                     <User className="mr-2 h-4 w-4" />
-                    Profile
+                    Billing
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, UserRole } from '@/lib/types';
+import { User, UserRole, UserSubscription } from '@/lib/types';
 import { apiClient } from '@/lib/api/client';
 import {
     registerSchema,
@@ -39,10 +39,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const response = await apiClient.get<UserResponse>('/api/v1/users/me');
             const validated = userResponseSchema.parse(response);
 
+            // Try to get subscription data if user is authenticated
+            let subscription: UserSubscription | undefined = undefined;
+            try {
+                const subResponse = await apiClient.get('/api/v1/subscriptions/me');
+                // Parse subscription response with schema
+                const { subscriptionResponseSchema } = await import('@/lib/api/schemas');
+                subscription = subscriptionResponseSchema.parse(subResponse);
+            } catch (error) {
+                // Subscription fetch failed - user might not have one
+                console.debug('Subscription fetch failed:', error);
+            }
+
             // Set user from backend response (role now comes from response)
             setUser({
                 ...validated,
                 role: validated.role || UserRole.PRODUCER,
+                subscription,
             });
         } catch (error) {
             // Not authenticated or error - silently fail

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AssetType, ProcessingStatus, LicenseType, BeatStatus, UserRole } from '@/lib/types';
+import { AssetType, ProcessingStatus, LicenseType, BeatStatus, UserRole, SubscriptionTier, SubscriptionStatus } from '@/lib/types';
 
 // ... (Rest of file)
 
@@ -140,3 +140,38 @@ export type AssetResponse = z.infer<typeof assetResponseSchema>;
 export type PricingInput = z.infer<typeof pricingSchema>;
 export type BeatPricingResponse = z.infer<typeof beatPricingResponseSchema>;
 
+// ============================================
+// Subscription Schemas
+// ============================================
+
+export const subscriptionResponseSchema = z.object({
+    tier: z.nativeEnum(SubscriptionTier),
+    status: z.nativeEnum(SubscriptionStatus),
+    currentPeriodEnd: dateTransformer,
+    cancelAtPeriodEnd: z.boolean(),
+});
+
+export const downloadStatsSchema = z.object({
+    downloadsThisPeriod: z.number(),
+    downloadLimit: z.number(),
+    periodStart: dateTransformer,
+    periodEnd: dateTransformer,
+});
+
+export const downloadLogResponseSchema = z.object({
+    id: z.string().uuid(),
+    beatId: z.string().uuid(),
+    beat: beatResponseSchema.optional(),
+    userId: z.string().uuid(),
+    licenseType: z.nativeEnum(LicenseType),
+    downloadedAt: dateTransformer,
+});
+
+export const downloadRequestSchema = z.object({
+    beatId: z.string().uuid(),
+});
+
+export type SubscriptionResponse = z.infer<typeof subscriptionResponseSchema>;
+export type DownloadStats = z.infer<typeof downloadStatsSchema>;
+export type DownloadLogResponse = z.infer<typeof downloadLogResponseSchema>;
+export type DownloadRequest = z.infer<typeof downloadRequestSchema>;

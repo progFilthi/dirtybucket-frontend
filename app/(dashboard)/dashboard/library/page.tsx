@@ -1,40 +1,18 @@
 'use client';
 
 import { useAuth } from '@/lib/providers/auth-provider';
+import { useDownloadHistory } from '@/lib/hooks/use-downloads';
 import { Nav } from '@/components/layout/nav';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Music } from 'lucide-react';
 import Link from 'next/link';
-
-// Mock data - would come from API in production
-const mockPurchases: Array<{
-  id: string;
-  beat: {
-    title: string;
-    producer: string;
-  };
-  licenseType: string;
-  price: number;
-  purchasedAt: string;
-  downloadUrl: string;
-}> = [
-  // {
-  //   id: '1',
-  //   beat: {
-  //     title: 'Dark Trap Beat',
-  //     producer: 'ProducerName',
-  //   },
-  //   licenseType: 'PREMIUM',
-  //   price: 99.99,
-  //   purchasedAt: '2026-01-15',
-  //   downloadUrl: '#',
-  // },
-];
+import { SubscriptionCard } from '@/components/subscription/subscription-card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function LibraryPage() {
   const { user } = useAuth();
+  const { data: downloads, isLoading } = useDownloadHistory();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,40 +22,60 @@ export default function LibraryPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">My Library</h1>
           <p className="text-muted-foreground mt-1">
-            Your purchased beats and licenses
+            Your downloaded beats and subscription
           </p>
         </div>
 
-        {mockPurchases.length > 0 ? (
+        {/* Subscription Status */}
+        <div className="mb-8">
+          <SubscriptionCard />
+        </div>
+
+        {/* Downloads Section */}
+        <div className="mb-4">
+          <h2 className="text-2xl font-semibold">Downloaded Beats</h2>
+          <p className="text-muted-foreground text-sm mt-1">
+            {isLoading ? 'Loading...' : `${downloads?.length || 0} beats in your library`}
+          </p>
+        </div>
+
+        {isLoading ? (
           <div className="space-y-4">
-            {mockPurchases.map((purchase) => (
-              <Card key={purchase.id}>
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-32 w-full" />
+            ))}
+          </div>
+        ) : downloads && downloads.length > 0 ? (
+          <div className="space-y-4">
+            {downloads.map((download) => (
+              <Card key={download.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle>{purchase.beat.title}</CardTitle>
+                      <CardTitle>{download.beat?.title || 'Unknown Beat'}</CardTitle>
                       <CardDescription>
-                        by {purchase.beat.producer}
+                        by {download.beat?.producer?.username || 'Unknown Producer'}
                       </CardDescription>
                     </div>
-                    <Badge>{purchase.licenseType}</Badge>
+                    <Badge>{download.licenseType}</Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <div className="text-sm text-muted-foreground">
-                      Purchased on {new Date(purchase.purchasedAt).toLocaleDateString()}
-                      {' • '}
-                      ${purchase.price.toFixed(2)}
+                      Downloaded on {new Date(download.downloadedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
                     </div>
-                    <a
-                      href={purchase.downloadUrl}
-                      download
+                    <Link
+                      href={`/browse/${download.beatId}`}
                       className="h-7 gap-1 px-2 text-xs/relaxed inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 transition-all"
                     >
                       <Download className="mr-2 h-4 w-4" />
-                      Download
-                    </a>
+                      Re-download
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -87,12 +85,12 @@ export default function LibraryPage() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-16">
               <Music className="h-16 w-16 text-muted-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No purchases yet</h3>
+              <h3 className="text-xl font-semibold mb-2">No downloads yet</h3>
               <p className="text-muted-foreground mb-6 text-center max-w-md">
-                Browse the marketplace to find beats and start building your library
+                Browse beats and start downloading to build your library
               </p>
-              <Link href="/marketplace" className="h-8 gap-1 px-2.5 text-xs/relaxed inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 transition-all">
-                Browse Marketplace
+              <Link href="/browse" className="h-8 gap-1 px-2.5 text-xs/relaxed inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-primary text-primary-foreground hover:bg-primary/80 transition-all">
+                Browse Beats
               </Link>
             </CardContent>
           </Card>

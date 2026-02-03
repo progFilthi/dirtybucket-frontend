@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Play, Pause } from 'lucide-react';
 import { Beat, AssetType, ProcessingStatus } from '@/lib/types';
+import { BeatDownloadButton } from './beat-download-button';
 
 interface BeatCardProps {
   beat: Beat;
@@ -103,14 +104,13 @@ export function BeatCard({ beat }: BeatCardProps) {
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
-          {lowestPrice !== null ? (
-            <div className="flex items-center justify-between w-full">
-              <span className="text-sm text-muted-foreground">Starting at</span>
-              <span className="text-lg font-bold">${lowestPrice.toFixed(2)}</span>
-            </div>
-          ) : (
-            <span className="text-sm text-muted-foreground">Price not set</span>
-          )}
+          <BeatDownloadButton
+            beatId={beat.id}
+            beatTitle={beat.title}
+            variant="default"
+            size="sm"
+            className="w-full"
+          />
         </CardFooter>
       </Card>
     </Link>

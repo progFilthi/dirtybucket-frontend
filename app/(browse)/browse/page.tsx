@@ -10,6 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Nav } from '@/components/layout/nav';
 import { Search, SlidersHorizontal } from 'lucide-react';
 
+import { DownloadLimitBadge } from '@/components/subscription/download-limit-badge';
+
 const GENRES = [
   'All',
   'Hip Hop',
@@ -48,10 +50,15 @@ export default function MarketplacePage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Marketplace</h1>
-          <p className="text-muted-foreground">
-            Discover and purchase beats from talented producers
-          </p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Browse Beats</h1>
+              <p className="text-muted-foreground">
+                Discover and download beats with your subscription
+              </p>
+            </div>
+            <DownloadLimitBadge />
+          </div>
         </div>
 
         {/* Filters */}
